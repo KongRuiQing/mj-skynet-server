@@ -25,6 +25,10 @@ signin 3 {
 }
 
 login 4 {
+	request {
+		deviceid 0 : string
+		platform 1 : string
+	}
 	response {
 		ok 0 : boolean
 	}
