@@ -15,22 +15,22 @@ local function free_agent(agent)
 	skynet.kill(agent)
 end
 
-function manager.assign(fd, userid)
+function manager.assign(fd)
 	local agent
 	repeat
-		agent = users[userid]
+		agent = users[fd]
 		if not agent then
 			agent = new_agent()
-			if not users[userid] then
+			if not users[fd] then
 				-- double check
-				users[userid] = agent
+				users[fd] = agent
 			else
 				free_agent(agent)
-				agent = users[userid]
+				agent = users[fd]
 			end
 		end
-	until skynet.call(agent, "lua", "assign", fd, userid)
-	log("Assign %d to %s [%s]", fd, userid, agent)
+	until skynet.call(agent, "lua", "assign", fd)
+	log("Assign %d [%s]", fd, agent)
 end
 
 function manager.exit(userid)

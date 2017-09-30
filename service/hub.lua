@@ -7,24 +7,24 @@ local service = require "service"
 local hub = {}
 local data = { socket = {} }
 
-local function auth_socket(fd)
-	return (skynet.call(service.auth, "lua", "shakehand" , fd))
-end
+--local function auth_socket(fd)
+	--return (skynet.call(service.auth, "lua", "shakehand" , fd))
+--end
 
 local function assign_agent(fd, userid)
-	skynet.call(service.manager, "lua", "assign", fd, userid)
+	skynet.call(service.manager, "lua", "assign", fd)
 end
 
 function new_socket(fd, addr)
 	data.socket[fd] = "[AUTH]"
 	proxy.subscribe(fd)
-	local ok , userid =  pcall(auth_socket, fd)
-	if ok then
-		data.socket[fd] = userid
-		if pcall(assign_agent, fd, userid) then
+	--local ok , userid =  pcall(auth_socket, fd)
+	if true then --ok
+		--data.socket[fd] = userid
+		if pcall(assign_agent, fd) then
 			return	-- succ
 		else
-			log("Assign failed %s to %s", addr, userid)
+			log("Assign failed %s to %s", addr)
 		end
 	else
 		log("Auth faild %s", addr)
@@ -54,7 +54,6 @@ service.init {
 	command = hub,
 	info = data,
 	require = {
-		"auth",
 		"manager",
 	}
 }
