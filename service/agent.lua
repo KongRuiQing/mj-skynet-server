@@ -7,8 +7,9 @@ local agent = {}
 local data = {}
 local cli = client.handler()
 
+
 function cli:ping()
-	assert(self.login)
+	--assert(self.login)
 	log "ping"
 end
 
