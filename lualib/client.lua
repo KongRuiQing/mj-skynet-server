@@ -6,9 +6,12 @@ local log = require "log"
 local client = {}
 local host
 local sender
-local handler = {}
+local handler = {
+	startTime = skynet.time()
+}
 
 function client.handler()
+	
 	return handler
 end
 

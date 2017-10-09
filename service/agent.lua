@@ -7,7 +7,6 @@ local agent = {}
 local data = {}
 local cli = client.handler()
 
-
 function cli:ping()
 	--assert(self.login)
 	log "ping"
@@ -24,6 +23,17 @@ function cli:login()
 	log("login succ %s fd=%d", data.userid, self.fd)
 	client.push(self, "push", { text = "welcome" })	-- push message to client
 	return { ok = true }
+end
+
+function cli:createRoom()
+	if not self.login then
+		return {ok = false}
+	end
+	if self.room then
+		log("create room fail room is exist %d",self.room)
+		return {ok = false}
+	end
+	skynet.call(service.room_mgr, "lua", "createRoom", skynet.self())
 end
 
 local function new_user(fd)
@@ -53,6 +63,7 @@ function agent.assign(fd, userid)
 		data.userid = userid
 	end
 	assert(data.userid == userid)
+
 	skynet.fork(new_user, fd)
 	return true
 end
@@ -62,6 +73,7 @@ service.init {
 	info = data,
 	require = {
 		"manager",
+		"room_mgr"
 	},
 	init = client.init "proto",
 }
