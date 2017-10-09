@@ -82,7 +82,7 @@ function table:setMatchState(state)
 end
 
 function self:initCards()
-  
+
 end
 
 function table:timer()
