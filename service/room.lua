@@ -10,8 +10,8 @@ local log = require "log"
 
 local room = {}
 local data = {
-	_table = table.new()
-	_player = {}
+	_table = table.new(),
+	_player = {},
 	_agent = {}
 }
 
