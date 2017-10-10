@@ -10,7 +10,7 @@ local log = require "log"
 
 local room = {}
 local data = {
-	for k,v in table do
+	for k,v in pairs(table) do
 		print(k)
 	end
 	_table = table.new(),
