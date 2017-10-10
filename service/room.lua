@@ -10,7 +10,7 @@ local log = require "log"
 
 local room = {}
 local data = {
-	_table = table.new(),
+	_table = table.new()
 	_player = {}
 	_agent = {}
 }
@@ -22,7 +22,7 @@ function K.initRoom(agent)
 end
 
 function K:joinRoom(agent)
-	local num_player = #data.player
+	local num_player = #data._player
 	if num_player < 4 then
 		data._player[num_player + 1] = player.new(agent)
 		data._agent[agent] = num_player + 1
@@ -52,7 +52,7 @@ function K:start(agent)
 		local cards = data._table.get_cards(2)
 		player_index = (card_step - 1) % 4
 		data._player[player_index]:give_cards(cards)
-		
+
 	end
 
 	for _,p in pairs(data._player) do

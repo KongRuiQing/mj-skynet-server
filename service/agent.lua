@@ -34,6 +34,27 @@ function cli:createRoom()
 		return {ok = false}
 	end
 	skynet.call(service.room_mgr, "lua", "createRoom", skynet.self())
+	return {ok = true}
+end
+
+function cli:joinRoom()
+	if not self.login then
+		return {ok = false}
+	end
+	if not self.room then
+		return {ok = false}
+	end
+	skynet.call(service.room,"lua","initRoom",skynet.self())
+end
+
+function cli:ready()
+	if not self.login then
+		return {ok = false}
+	end
+	if not self.room then
+		return {ok = false}
+	end
+	skynet.call(self.room,"lua","ready",skynet.self())
 end
 
 local function new_user(fd)
@@ -68,6 +89,8 @@ function agent.assign(fd, userid)
 	return true
 end
 
+
+
 service.init {
 	command = agent,
 	info = data,
@@ -77,4 +100,3 @@ service.init {
 	},
 	init = client.init "proto",
 }
-
