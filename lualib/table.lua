@@ -1,5 +1,4 @@
 local skynet = require "skynet"
-
 local log = require "log"
 local table = {}
 
@@ -20,8 +19,6 @@ function table:init()
   self.cards = {}
   self.game_state = TableState.WaitingToStart
 end
-
-
 
 function table:RequestStart()
 
@@ -59,7 +56,7 @@ function table:setMatchState(state)
   end
 end
 
-function self:initCards()
+function table:initCards()
 
 end
 
@@ -70,10 +67,7 @@ function table:timer()
 end
 
 function table:updateGameState()
-  if game_state == TableState.WaitingToStart then
 
-  elseif game_state == TableState.InProgress then
-  end
 end
 
 return table
