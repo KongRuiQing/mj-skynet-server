@@ -10,6 +10,9 @@ local log = require "log"
 
 local room = {}
 local data = {
+	for k,v in table do
+		print(k)
+	end
 	_table = table.new(),
 	_player = {},
 	_agent = {}
