@@ -36,7 +36,7 @@ login 4 {
 
 createRoom 5 {
 	request {
-		player_nnum 0 : integer
+		player_num 0 : integer
 	}
 	response {
 		ok 0 : boolean
