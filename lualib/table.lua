@@ -1,7 +1,6 @@
 local skynet = require "skynet"
 
 local log = require "log"
-local player = require "player"
 local table = {}
 
 local TableState = {
@@ -17,33 +16,12 @@ function table.new()
 end
 
 function table:init()
-  self.player = {}
-  self.num_player = 0
+
   self.cards = {}
   self.game_state = TableState.WaitingToStart
 end
 
 
-function table:master(agent)
-  if ~self.player[agent] then
-    return false
-  end
-  return true
-end
-
-function table:join(agent)
-  if self.player[agent] then
-    return false
-  end
-  self.player[agent] = player.new(agent)
-
-  self.num_player = self.num_player + 1
-  return true
-end
-
-function table:onPlayerReady(is_ready)
-
-end
 
 function table:RequestStart()
 
