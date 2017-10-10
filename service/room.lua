@@ -8,11 +8,13 @@ local table = require "table"
 local player = require "player"
 local log = require "log"
 
+for k,v in pairs(table) do
+	print(k)
+end
+
 local room = {}
 local data = {
-	for k,v in pairs(table) do
-		print(k)
-	end
+
 	_table = table.new(),
 	_player = {},
 	_agent = {}
