@@ -4,18 +4,14 @@
 --
 local skynet = require "skynet"
 local service = require "service"
-local table_class = require "table"
+local game_table = require "game_table"
 local player = require "player"
 local log = require "log"
-
-for k,v in pairs(table_class) do
-	print(k)
-end
 
 local room = {}
 local data = {
 
-	_table = table_class.new(),
+	_table = game_table.new(),
 	_player = {},
 	_agent = {}
 }
