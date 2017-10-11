@@ -9,8 +9,8 @@ local TableState = {
 
 function K.new()
   local o = {}
-  setmetatable(o, table)
-  table.init(o)
+  setmetatable(o, K)
+  K.init(o)
   return o
 end
 
