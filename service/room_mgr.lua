@@ -11,6 +11,7 @@ local K = {}
 
 
 function K.createRoom(agent)
+	log("createRoom %d", agent)
 	if data.full then
 		return false,nil
 	end

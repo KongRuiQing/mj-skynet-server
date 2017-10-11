@@ -21,6 +21,7 @@ function K:initRoom(agent)
 	for k,v in pairs(data._player[1]) do
 		log("player. %s",k)
 	end
+	log("agent %d",agent)
 	data._player[1]:setMaster()
 	data._agent[agent] = 1
 end
