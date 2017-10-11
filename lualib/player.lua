@@ -1,5 +1,6 @@
 local skynet = require "skynet"
 local player = {}
+
 function player.new(...)
   local o = {}
   setmetatable(o, player)
@@ -45,3 +46,5 @@ function player:start()
   end
   return bool
 end
+
+return player
