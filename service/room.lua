@@ -16,7 +16,7 @@ local data = {
 	_agent = {}
 }
 
-function K.initRoom(agent)
+function K:initRoom(agent)
 	data._player[1] = player.new(agent)
 	data._player[1]:setMaster()
 	data._agent[agent] = 1
