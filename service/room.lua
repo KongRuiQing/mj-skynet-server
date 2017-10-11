@@ -16,7 +16,7 @@ local data = {
 	_agent = {}
 }
 
-function K:initRoom(agent)
+function K.initRoom(agent)
 	data._player[1] = player.new(agent)
 	for k,v in pairs(data._player[1]) do
 		log("player. %s",k)
@@ -26,7 +26,7 @@ function K:initRoom(agent)
 	data._agent[agent] = 1
 end
 
-function K:joinRoom(agent)
+function K.joinRoom(agent)
 	local num_player = #data._player
 	if num_player < 4 then
 		data._player[num_player + 1] = player.new(agent)
@@ -34,7 +34,7 @@ function K:joinRoom(agent)
 	end
 end
 
-function K:ready(agent)
+function K.ready(agent)
 	local player_index = data._agent[agent]
 	if not player_index then
 		return false
@@ -42,7 +42,7 @@ function K:ready(agent)
 	data._player[player_index]:ready()
 end
 
-function K:start(agent)
+function K.start(agent)
 	local player_index = data._agent[agent]
 	if not player_index then
 		return false
