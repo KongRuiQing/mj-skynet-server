@@ -3,7 +3,7 @@ local player = {}
 
 function player.new(...)
   local o = {}
-  setmetatable(o, player)
+  setmetatable(o, {__index = player})
   player.init(o,...)
   return o
 end
