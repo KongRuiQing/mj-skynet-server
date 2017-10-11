@@ -70,4 +70,4 @@ function K:updateGameState()
 
 end
 
-return table
+return K
