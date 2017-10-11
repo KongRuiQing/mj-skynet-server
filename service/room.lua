@@ -9,6 +9,7 @@ local player = require "player"
 local log = require "log"
 
 local K = {}
+
 local data = {
 	_table = game_table.new(),
 	_player = {},

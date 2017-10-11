@@ -3,12 +3,11 @@ local player = {}
 function player.new(...)
   local o = {}
   setmetatable(o, player)
-  table.init(o,...)
+  player.init(o,...)
   return o
 end
 
-function player:init(table,agent)
-  self.table = table
+function player:init(agent)
   self.agent = agent
   self.cards = {}
   self.is_ready = false
