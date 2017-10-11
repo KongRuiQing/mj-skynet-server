@@ -18,6 +18,9 @@ local data = {
 
 function K:initRoom(agent)
 	data._player[1] = player.new(agent)
+	for k,v in pairs(data._player[1]) do
+		log("player. %s",k)
+	end
 	data._player[1]:setMaster()
 	data._agent[agent] = 1
 end
