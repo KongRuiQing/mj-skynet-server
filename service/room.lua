@@ -8,9 +8,8 @@ local game_table = require "game_table"
 local player = require "player"
 local log = require "log"
 
-local room = {}
+local K = {}
 local data = {
-
 	_table = game_table.new(),
 	_player = {},
 	_agent = {}
@@ -61,10 +60,6 @@ function K:start(agent)
 	end
 	return true
 end
-
-
-
-
 
 
 service.init {

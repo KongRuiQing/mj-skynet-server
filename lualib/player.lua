@@ -15,6 +15,11 @@ function player:init(table,agent)
   self.is_master = false
 end
 
+function player:setMaster()
+  self.is_master = true
+  self.is_ready = true
+end
+
 function player:ready()
   if self.is_master then
     return false

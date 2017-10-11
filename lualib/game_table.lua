@@ -1,31 +1,31 @@
 local skynet = require "skynet"
 local log = require "log"
-local table = {}
+local K = {}
 
 local TableState = {
   WaitingToStart = 1,
   InProgress = 2
 }
 
-function table.new()
+function K.new()
   local o = {}
   setmetatable(o, table)
   table.init(o)
   return o
 end
 
-function table:init()
+function K:init()
 
   self.cards = {}
   self.game_state = TableState.WaitingToStart
 end
 
-function table:RequestStart()
+function K:RequestStart()
 
   self:begin()
 end
 
-function table:checkCanStart()
+function K:checkCanStart()
   if self.num_player ~= 4 then
     return false
   end
@@ -44,29 +44,29 @@ local function handler(obj,method)
   end
 end
 
-function table:begin()
+function K:begin()
   self:setMatchState(TableState.InProgress)
   skynet.timeout(1000,handler(self,self.timer))
 end
 
-function table:setMatchState(state)
+function K:setMatchState(state)
   self.game_state = state
   if self.game_state == TableState.InProgress then
     self:initCards()
   end
 end
 
-function table:initCards()
+function K:initCards()
 
 end
 
-function table:timer()
+function K:timer()
   self:updateGameState()
 
   skynet.timeout(1000,handler(self,self.timer))
 end
 
-function table:updateGameState()
+function K:updateGameState()
 
 end
 

@@ -33,8 +33,11 @@ function cli:createRoom()
 		log("create room fail room is exist %d",self.room)
 		return {ok = false}
 	end
-	skynet.call(service.room_mgr, "lua", "createRoom", skynet.self())
-	return {ok = true}
+	local result,room = skynet.call(service.room_mgr, "lua", "createRoom", skynet.self())
+	if result then
+		self.room = room
+	end
+	return {ok = result}
 end
 
 function cli:joinRoom()

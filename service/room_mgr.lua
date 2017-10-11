@@ -12,11 +12,11 @@ local K = {}
 
 function K.createRoom(agent)
 	if data.full then
-		return false
+		return false,nil
 	end
 	local room = skynet.newservice "room"
 	skynet.call(room, "lua", "initRoom", agent)
-	return room
+	return true,room
 end
 
 service.init {
