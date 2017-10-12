@@ -41,6 +41,21 @@ function cli:createRoom()
 	return {ok = result}
 end
 
+function cli:addRobot()
+	if not self.login then
+		return {ok = false}
+	end
+
+	if not self.room then
+		return {ok = false}
+	end
+
+	local result = skynet.call(self.room,"lua","addRobot")
+
+	return {ok = result}
+
+end
+
 function cli:joinRoom()
 	if not self.login then
 		return {ok = false}
@@ -48,7 +63,7 @@ function cli:joinRoom()
 	if not self.room then
 		return {ok = false}
 	end
-	skynet.call(service.room,"lua","initRoom",skynet.self())
+	--skynet.call(service.room,"lua","initRoom",skynet.self())
 end
 
 function cli:ready()

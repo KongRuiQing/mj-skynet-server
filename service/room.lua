@@ -16,6 +16,12 @@ local data = {
 	_agent = {}
 }
 
+local function BroadcastPlayerJoin()
+	for k,agent_id in pairs(data._agent) do
+		skynet.send(agent_id,"lua","onPlayerJoin",{name = data._player[k].getName()})
+	end
+end
+
 function K.initRoom(agent)
 	data._player[1] = player.new(agent)
 	for k,v in pairs(data._player[1]) do
@@ -24,11 +30,12 @@ function K.initRoom(agent)
 	log("agent %d",agent)
 	data._player[1]:setMaster()
 	data._agent[agent] = 1
+	data._need_player_num = 2
 end
 
 function K.joinRoom(agent)
 	local num_player = #data._player
-	if num_player < 4 then
+	if num_player < data._need_player_num then
 		data._player[num_player + 1] = player.new(agent)
 		data._agent[agent] = num_player + 1
 	end
@@ -47,9 +54,13 @@ function K.start(agent)
 	if not player_index then
 		return false
 	end
+	if not data._player[player_index] then
+		return false
+	end
 	if not data._player[player_index]:isMaster() then
 		return false
 	end
+
 	data._table:start()
 
 	local card_step = 1
@@ -64,6 +75,22 @@ function K.start(agent)
 		p:sync_cards()
 	end
 	return true
+end
+
+function K.addRobot()
+	local num_player = #data._player
+	if num_player >= data._need_player_num then
+		return false
+	end
+
+	local robot_id = num_player + 1
+
+	data._player[robot_id] = player.robot(robot_id)
+
+
+
+	return true
+
 end
 
 
