@@ -9,3 +9,9 @@ push 1 {
 		text 0 : string
 	}
 }
+
+NotifyPlayerJoin 2 {
+	request {
+		name 0 : string
+	}
+}

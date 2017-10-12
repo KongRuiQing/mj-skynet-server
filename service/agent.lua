@@ -108,6 +108,10 @@ function agent.assign(fd, userid)
 	return true
 end
 
+function agent.onPlayerJoin(player)
+	client.push(data, "NotifyPlayerJoin", { name = player.name })	-- push message to client
+end
+
 
 
 service.init {

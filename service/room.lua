@@ -5,7 +5,7 @@
 local skynet = require "skynet"
 local service = require "service"
 local game_table = require "game_table"
-local player = require "player"
+local PlayerClass = require "player"
 local log = require "log"
 
 local K = {}
@@ -16,14 +16,14 @@ local data = {
 	_agent = {}
 }
 
-local function BroadcastPlayerJoin()
-	for k,agent_id in pairs(data._agent) do
-		skynet.send(agent_id,"lua","onPlayerJoin",{name = data._player[k].getName()})
+local function BroadcastPlayerJoin(p)
+	for agent_id,player_index in pairs(data._agent) do
+		skynet.send(agent_id,"lua","onPlayerJoin",{name = p.getName()})
 	end
 end
 
 function K.initRoom(agent)
-	data._player[1] = player.new(agent)
+	data._player[1] = PlayerClass.new(agent)
 	for k,v in pairs(data._player[1]) do
 		log("player. %s",k)
 	end
@@ -36,7 +36,7 @@ end
 function K.joinRoom(agent)
 	local num_player = #data._player
 	if num_player < data._need_player_num then
-		data._player[num_player + 1] = player.new(agent)
+		data._player[num_player + 1] = PlayerClass.new(agent)
 		data._agent[agent] = num_player + 1
 	end
 end
@@ -84,13 +84,9 @@ function K.addRobot()
 	end
 
 	local robot_id = num_player + 1
-
-	data._player[robot_id] = player.robot(robot_id)
-
-
-
+	data._player[robot_id] = PlayerClass.robot(robot_id)
+	BroadcastPlayerJoin(data._player[robot_id])
 	return true
-
 end
 
 
