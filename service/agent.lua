@@ -109,6 +109,7 @@ function agent.assign(fd, userid)
 end
 
 function agent.onPlayerJoin(player)
+	log("notify onPlayerJoin %s",player.name)
 	client.push(data, "NotifyPlayerJoin", { name = player.name })	-- push message to client
 end
 
