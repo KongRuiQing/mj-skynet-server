@@ -18,7 +18,7 @@ local data = {
 
 local function BroadcastPlayerJoin(p)
 	for agent_id,player_index in pairs(data._agent) do
-		skynet.send(agent_id,"lua","onPlayerJoin",{name = p.getName()})
+		skynet.send(agent_id,"lua","onPlayerJoin",{name = p:getName()})
 	end
 end
 
