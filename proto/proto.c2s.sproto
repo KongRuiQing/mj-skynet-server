@@ -43,4 +43,8 @@ createRoom 5 {
 	}
 }
 
-addRobot 6 {}
+addRobot 6 {
+	response {
+		ok 0 : boolean
+	}
+}
