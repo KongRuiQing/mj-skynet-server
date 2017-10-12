@@ -42,3 +42,5 @@ createRoom 5 {
 		ok 0 : boolean
 	}
 }
+
+addRobot 6 {}
