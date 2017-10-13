@@ -29,6 +29,7 @@ local data = {
 
 local function BroadcastPlayerJoin(p)
 	for agent_id,player_index in pairs(data._agent) do
+
 		skynet.send(agent_id,"lua","onPlayerJoin",{
 			name = p:getName(),
 			is_ready = p:isReady(),
@@ -119,8 +120,11 @@ function K.addRobot()
 
 	local robot_id = num_player + 1
 	data._player[robot_id] = PlayerClass.robot(robot_id)
-	BroadcastPlayerJoin(data._player[robot_id])
-	return true
+	local ok,error_msg = pcall(BroadcastPlayerJoin,data._player[robot_id])
+	if not ok then
+		print(error_msg)
+	end
+	return ok
 end
 
 
