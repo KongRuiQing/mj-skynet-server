@@ -125,7 +125,10 @@ function agent.onPlayerJoin(player)
 	client.push(data, "NotifyPlayerJoin", { name = player.name })	-- push message to client
 end
 
-
+local function _init()
+	log("room addresss %d",skynet.self())
+	client.init "proto"
+end
 
 service.init {
 	command = agent,
@@ -134,5 +137,5 @@ service.init {
 		"manager",
 		"room_mgr"
 	},
-	init = client.init "proto",
+	init = _init
 }

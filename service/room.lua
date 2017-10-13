@@ -127,6 +127,9 @@ function K.addRobot()
 	return ok
 end
 
+	log("room addresss %d",skynet.self())
+end
+
 
 service.init {
 	command = K,
