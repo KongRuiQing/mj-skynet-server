@@ -48,3 +48,9 @@ addRobot 6 {
 		ok 0 : boolean
 	}
 }
+
+startGame 7 {
+	response {
+		ok 0 : boolean
+	}
+}

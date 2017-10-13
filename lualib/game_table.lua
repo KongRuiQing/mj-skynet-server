@@ -2,10 +2,6 @@ local skynet = require "skynet"
 local log = require "log"
 local K = {}
 
-local TableState = {
-  WaitingToStart = 1,
-  InProgress = 2
-}
 
 function K.new()
   local o = {}
@@ -15,9 +11,15 @@ function K.new()
 end
 
 function K:init()
-
-  self.cards = {}
-  self.game_state = TableState.WaitingToStart
+  self.cards = {
+    0x01,0x02
+  }
+  for i=#self.cards,2,-1 do
+    local tmp = self.cards[i]
+    local index = math.random(1, i - 1)
+    self.cards[i] = self.cards[index]
+    self.cards[index] = tmp
+  end
 end
 
 function K:RequestStart()

@@ -8,29 +8,69 @@ local game_table = require "game_table"
 local PlayerClass = require "player"
 local log = require "log"
 
+
 local K = {}
+
+local MatchState = {
+	EnteringMap = 1,
+	WaitingToStart = 2,
+	InProgress = 3,
+	WaitingPostMatch = 4,
+	LeavingMap = 5,
+	Aborted = 6,
+}
 
 local data = {
 	_table = game_table.new(),
 	_player = {},
-	_agent = {}
+	_agent = {},
+	_matchState = 0
 }
 
 local function BroadcastPlayerJoin(p)
 	for agent_id,player_index in pairs(data._agent) do
-		skynet.send(agent_id,"lua","onPlayerJoin",{name = p:getName()})
+		skynet.send(agent_id,"lua","onPlayerJoin",{
+			name = p:getName(),
+			is_ready = p:isReady(),
+		})
 	end
+end
+
+local function setMatchState(matchState)
+	if matchState == data._matchState then
+		return
+	end
+	data._matchState = matchState
+	onMatchStateSet()
+end
+
+local function onMatchStateSet()
+	if data._matchState == MatchState.WaitingToStart then
+		HandleMatchIsWaitingToStart()
+	elseif data._matchState == MatchState.InProgress then
+		HandleMatchHasStarted()
+	end
+end
+
+local function HandleMatchIsWaitingToStart()
+	data._table:init()
+end
+
+local function HandleMatchHasStarted()
+
+end
+
+function gameTimer()
+
 end
 
 function K.initRoom(agent)
 	data._player[1] = PlayerClass.new(agent)
-	for k,v in pairs(data._player[1]) do
-		log("player. %s",k)
-	end
-	log("agent %d",agent)
 	data._player[1]:setMaster()
 	data._agent[agent] = 1
 	data._need_player_num = 2
+	setMatchState(MatchState.WaitingToStart)
+	skynet.timeout(1000,K.gameTimer)
 end
 
 function K.joinRoom(agent)
@@ -49,7 +89,7 @@ function K.ready(agent)
 	data._player[player_index]:ready()
 end
 
-function K.start(agent)
+function K.startGame(agent)
 	local player_index = data._agent[agent]
 	if not player_index then
 		return false
@@ -61,19 +101,12 @@ function K.start(agent)
 		return false
 	end
 
-	data._table:start()
-
-	local card_step = 1
-	while card_step < 13 do
-		local cards = data._table.get_cards(2)
-		player_index = (card_step - 1) % 4
-		data._player[player_index]:give_cards(cards)
-
+	for player_index , player in pairs(data._player) do
+		if not player:isReady() then
+			return false
+		end
 	end
-
-	for _,p in pairs(data._player) do
-		p:sync_cards()
-	end
+	setMatchState(GameState.InProgress)
 	return true
 end
 
