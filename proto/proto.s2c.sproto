@@ -13,5 +13,6 @@ push 1 {
 NotifyPlayerJoin 2 {
 	request {
 		name 0 : string
+		is_ready 1 : boolean
 	}
 }
