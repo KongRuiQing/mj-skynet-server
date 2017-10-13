@@ -120,7 +120,7 @@ function K.addRobot()
 
 	local robot_id = num_player + 1
 	data._player[robot_id] = PlayerClass.robot(robot_id)
-	
+	BroadcastPlayerJoin(data._player[robot_id])
 	return ok
 end
 

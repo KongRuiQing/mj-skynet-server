@@ -122,7 +122,8 @@ end
 
 function agent.onPlayerJoin(player)
 	log("notify onPlayerJoin %s",player.name)
-	client.push(data, "NotifyPlayerJoin", { name = player.name })	-- push message to client
+	log("on playerJoin %d",data.fd)
+	client.push(data, "NotifyPlayerJoin", { name = player.name ,is_ready = player.is_ready})	-- push message to client
 end
 
 
