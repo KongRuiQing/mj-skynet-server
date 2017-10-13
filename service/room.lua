@@ -120,10 +120,7 @@ function K.addRobot()
 
 	local robot_id = num_player + 1
 	data._player[robot_id] = PlayerClass.robot(robot_id)
-	local ok,error_msg = pcall(BroadcastPlayerJoin,data._player[robot_id])
-	if not ok then
-		print(error_msg)
-	end
+	
 	return ok
 end
 
