@@ -36,12 +36,12 @@ local function BroadcastPlayerJoin(p)
 	end
 end
 
-local function setMatchState(matchState)
-	if matchState == data._matchState then
-		return
-	end
-	data._matchState = matchState
-	onMatchStateSet()
+local function HandleMatchIsWaitingToStart()
+	data._table:init()
+end
+
+local function HandleMatchHasStarted()
+
 end
 
 local function onMatchStateSet()
@@ -52,13 +52,14 @@ local function onMatchStateSet()
 	end
 end
 
-local function HandleMatchIsWaitingToStart()
-	data._table:init()
+local function setMatchState(matchState)
+	if matchState == data._matchState then
+		return
+	end
+	data._matchState = matchState
+	onMatchStateSet()
 end
 
-local function HandleMatchHasStarted()
-
-end
 
 function gameTimer()
 
