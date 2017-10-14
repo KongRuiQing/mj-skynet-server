@@ -49,6 +49,10 @@ function player:setMaster()
   self.is_ready = true
 end
 
+function player:isMaster()
+  return self.is_master
+end
+
 function player:ready()
   if self.is_master then
     return false
