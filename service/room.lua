@@ -120,6 +120,16 @@ function K.getPlayerNum()
 	return n
 end
 
+function K.getMasterIndex()
+	for _,player_index in pairs(data._agent) do
+		local p = data._player[player_index]
+		if p and p:isMaster() then
+			return p:getIndex()
+		end
+	end
+	return 0
+end
+
 
 function K.addRobot()
 	local num_player = K.getPlayerNum()
@@ -127,7 +137,7 @@ function K.addRobot()
 		return false
 	end
 
-	local robot_id = 1
+	local robot_id = K.getMasterIndex() + 1
 	while data._player[robot_id] do
 		robot_id = ((robot_id + 1) % data._need_player_num) + 1
 	end
