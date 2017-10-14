@@ -20,11 +20,14 @@ function service.init(mod)
 		if mod.init then
 			mod.init()
 		end
-		skynet.dispatch("lua", function (_,session, cmd, ...)
+		skynet.dispatch("lua", function (src,session, cmd, ...)
 			local f = funcs[cmd]
+			log("%d skynet dispatch %d %d %s",skynet.self(),src,session,cmd)
 			if f then
 				if session > 0 then
 					skynet.ret(skynet.pack(f(...)))
+				else
+					f(...)
 				end
 			else
 				log("Unknown command : [%s]", cmd)
