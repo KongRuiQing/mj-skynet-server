@@ -69,22 +69,18 @@ end
 
 function K.initRoom(agent)
 	data._need_player_num = 4
-
 	local n = math.random(data._need_player_num)
+
 	data._player[n] = PlayerClass.new(agent,n)
 	data._player[n]:setMaster()
 	data._agent[agent] = n
 	setMatchState(MatchState.WaitingToStart)
-
+	log("%d initRoom player_index %d" ,skynet.self(),n)
 	return true,n
 end
 
 function K.joinRoom(agent)
-	local num_player = #data._player
-	if num_player < data._need_player_num then
-		data._player[num_player + 1] = PlayerClass.new(agent)
-		data._agent[agent] = num_player + 1
-	end
+
 end
 
 function K.ready(agent)
@@ -135,6 +131,8 @@ function K.addRobot()
 	while data._player[robot_id] do
 		robot_id = ((robot_id + 1) % data._need_player_num) + 1
 	end
+	log("%d addRobot robot_id %d",skynet.self(),robot_id)
+
 	data._player[robot_id] = PlayerClass.robot(robot_id)
 	BroadcastPlayerJoin(data._player[robot_id])
 	return true
