@@ -132,7 +132,7 @@ function K.addRobot()
 	end
 
 	local robot_id = 1
-	while data._player[robot_id] then
+	while data._player[robot_id] do
 		robot_id = ((robot_id + 1) % data._need_player_num) + 1
 	end
 	data._player[robot_id] = PlayerClass.robot(robot_id)
