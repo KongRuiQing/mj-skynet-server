@@ -137,7 +137,7 @@ function K.addRobot()
 		return false
 	end
 
-	local robot_id = K.getMasterIndex() + 1
+	local robot_id = K.getMasterIndex() % data._need_player_num + 1
 	while data._player[robot_id] do
 		robot_id = ((robot_id) % data._need_player_num) + 1
 	end
