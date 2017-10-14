@@ -7,7 +7,7 @@ local service = require "service"
 local game_table = require "game_table"
 local PlayerClass = require "player"
 local log = require "log"
-
+local queue = require "skynet.queue"
 
 local K = {}
 
@@ -29,8 +29,11 @@ local data = {
 
 local function BroadcastPlayerJoin(p)
 	for agent_id,player_index in pairs(data._agent) do
-		log("send proto(onPlayerJoin) agent_id %d player_index %d",agent_id,player_index)
-		skynet.send(agent_id,"lua","onPlayerJoin",p:getName(),p:isReady())
+		--log("send proto(onPlayerJoin) agent_id %d player_index %d",agent_id,player_index)
+		skynet.send(agent_id,"lua","onPlayerJoin",{
+			name = p:getName(),
+			is_ready = p:isReady()
+		})
 	end
 end
 
