@@ -20,6 +20,7 @@ function player:initPlayer(agent)
   self.cards = {}
   self.is_ready = false
   self.is_master = false
+  self.is_robot = false
   self.name = ""
 end
 
@@ -29,6 +30,7 @@ function player:initRobot(robot_id)
   self.cards = {}
   self.is_ready = true
   self.is_master = false
+  self.is_robot = true
   self.name = "robot-" .. robot_id
 end
 

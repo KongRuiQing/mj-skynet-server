@@ -120,9 +120,12 @@ function agent.assign(fd, userid)
 	return true
 end
 
-function agent.onPlayerJoin(name,is_ready)
-	log("notify onPlayerJoin %s",name)
-	client.push(data, "NotifyPlayerJoin", { name = name ,is_ready = is_ready})	-- push message to client
+function agent.onPlayerJoin(player_info)
+	--log("notify onPlayerJoin %s",name)
+	client.push(data, "NotifyPlayerJoin", {
+		name = player_info.name ,
+		is_ready = player_info.is_ready
+	})	-- push message to client
 	return 0
 end
 
