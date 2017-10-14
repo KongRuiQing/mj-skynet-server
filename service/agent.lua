@@ -49,9 +49,9 @@ function cli:addRobot()
 	if not self.room then
 		return {ok = false}
 	end
-	local result = skynet.call(self.room,"lua","addRobot")
+	skynet.send(self.room,"lua","addRobot")
 
-	return {ok = result}
+	return {ok = true}
 end
 
 function cli:startGame()
