@@ -139,7 +139,7 @@ function K.addRobot()
 
 	local robot_id = K.getMasterIndex() + 1
 	while data._player[robot_id] do
-		robot_id = ((robot_id + 1) % data._need_player_num) + 1
+		robot_id = ((robot_id) % data._need_player_num) + 1
 	end
 	log("%d addRobot robot_id %d",skynet.self(),robot_id)
 
