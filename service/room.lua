@@ -117,7 +117,7 @@ function K.addRobot()
 
 	local robot_id = num_player + 1
 	data._player[robot_id] = PlayerClass.robot(robot_id)
-	skynet.timeout(3* 100,function() BroadcastPlayerJoin(data._player[robot_id]) end)
+	BroadcastPlayerJoin(data._player[robot_id])
 	return true
 end
 
