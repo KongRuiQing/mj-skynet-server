@@ -22,7 +22,7 @@ function service.init(mod)
 		end
 		skynet.dispatch("lua", function (src,session, cmd, ...)
 			local f = funcs[cmd]
-			log("[%d]%s skynet dispatch src:%d session:%d cmd:%s",skynet.self(),skynet.name(),src,session,cmd)
+			log("service[%d] skynet dispatch src:%d session:%d cmd:%s",skynet.self(),src,session,cmd)
 			if f then
 				if src > 0 then
 					skynet.ret(skynet.pack(f(...)))
