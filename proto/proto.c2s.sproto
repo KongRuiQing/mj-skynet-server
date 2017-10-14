@@ -39,7 +39,8 @@ createRoom 5 {
 		player_num 0 : integer
 	}
 	response {
-		ok 0 : boolean
+		ok 0 : boolean,
+		player_index 1 : integer
 	}
 }
 

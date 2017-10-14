@@ -16,8 +16,8 @@ function K.createRoom(agent)
 		return false,nil
 	end
 	local room = skynet.newservice "room"
-	skynet.call(room, "lua", "initRoom", agent)
-	return true,room
+	local ok,player_index = skynet.call(room, "lua", "initRoom", agent)
+	return ok,room,player_index
 end
 
 service.init {

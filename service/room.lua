@@ -32,7 +32,8 @@ local function BroadcastPlayerJoin(p)
 		--log("send proto(onPlayerJoin) agent_id %d player_index %d",agent_id,player_index)
 		skynet.send(agent_id,"lua","onPlayerJoin",{
 			name = p:getName(),
-			is_ready = p:isReady()
+			is_ready = p:isReady(),
+			player_index = p:getIndex()
 		})
 	end
 end
@@ -67,12 +68,15 @@ function gameTimer()
 end
 
 function K.initRoom(agent)
-	data._player[1] = PlayerClass.new(agent)
-	data._player[1]:setMaster()
-	data._agent[agent] = 1
-	data._need_player_num = 2
+	data._need_player_num = 4
+
+	local n = math.random(data._need_player_num)
+	data._player[n] = PlayerClass.new(agent,n)
+	data._player[n]:setMaster()
+	data._agent[agent] = n
 	setMatchState(MatchState.WaitingToStart)
-	skynet.timeout(1000,K.gameTimer)
+
+	return true,n
 end
 
 function K.joinRoom(agent)
@@ -112,13 +116,25 @@ function K.startGame(agent)
 	return true
 end
 
+function K.getPlayerNum()
+	local n = 0
+	for _,_ in pairs(data._player) do
+		n = n + 1
+	end
+	return n
+end
+
+
 function K.addRobot()
-	local num_player = #data._player
+	local num_player = K.getPlayerNum()
 	if num_player >= data._need_player_num then
 		return false
 	end
 
-	local robot_id = num_player + 1
+	local robot_id = 1
+	while data._player[robot_id] then
+		robot_id = ((robot_id + 1) % data._need_player_num) + 1
+	end
 	data._player[robot_id] = PlayerClass.robot(robot_id)
 	BroadcastPlayerJoin(data._player[robot_id])
 	return true
@@ -126,6 +142,7 @@ end
 
 local function _init()
 	log("room addresss %d",skynet.self())
+	math.randomseed(os.time())
 end
 
 

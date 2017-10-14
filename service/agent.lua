@@ -34,11 +34,11 @@ function cli:createRoom()
 		return {ok = false}
 	end
 	log("self:%d",skynet.self())
-	local result,room = skynet.call(service.room_mgr, "lua", "createRoom", skynet.self())
+	local result,room,player_index = skynet.call(service.room_mgr, "lua", "createRoom", skynet.self())
 	if result then
 		self.room = room
 	end
-	return {ok = result}
+	return {ok = result,player_index = player_index}
 end
 
 function cli:addRobot()
@@ -124,7 +124,8 @@ function agent.onPlayerJoin(player_info)
 	--log("notify onPlayerJoin %s",name)
 	client.push(data, "NotifyPlayerJoin", {
 		name = player_info.name ,
-		is_ready = player_info.is_ready
+		is_ready = player_info.is_ready,
+		player_index = player_info.player_index
 	})	-- push message to client
 	return 0
 end

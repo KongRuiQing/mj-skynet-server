@@ -15,8 +15,9 @@ function player.robot(...)
   return o
 end
 
-function player:initPlayer(agent)
+function player:initPlayer(agent,player_index)
   self.agent = agent
+  self.player_index = player_index
   self.cards = {}
   self.is_ready = false
   self.is_master = false
@@ -27,6 +28,7 @@ end
 
 function player:initRobot(robot_id)
   self.agent = nil
+  self.player_index = robot_id
   self.cards = {}
   self.is_ready = true
   self.is_master = false
@@ -36,6 +38,10 @@ end
 
 function player:getName()
   return self.name
+end
+
+function player:getIndex()
+  return self.player_index
 end
 
 function player:setMaster()
