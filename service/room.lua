@@ -20,17 +20,19 @@ local MatchState = {
 	Aborted = 6,
 }
 
-local data = {
-	_agent = {},
-	_room = room.new()
-}
-
 function room.new()
 	local o = {}
 	setmetatable(o,{__index = room })
 	room.init(o)
 	return o
 end
+
+local data = {
+	_agent = {},
+	_room = room.new()
+}
+
+
 
 local function BroadcastPlayerJoin(p)
 	for agent_id,player_index in pairs(data._agent) do
