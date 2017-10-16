@@ -8,7 +8,7 @@ local game_table = require "game_table"
 local PlayerClass = require "player"
 local log = require "log"
 local queue = require "skynet.queue"
-
+local room = {}
 local K = {}
 
 local MatchState = {
@@ -21,11 +21,16 @@ local MatchState = {
 }
 
 local data = {
-	_table = game_table.new(),
-	_player = {},
 	_agent = {},
-	_matchState = 0
+	_room = room.new()
 }
+
+function room.new()
+	local o = {}
+	setmetatable(o,{__index = room })
+	room.init(o)
+	return o
+end
 
 local function BroadcastPlayerJoin(p)
 	for agent_id,player_index in pairs(data._agent) do
@@ -38,45 +43,93 @@ local function BroadcastPlayerJoin(p)
 	end
 end
 
-local function HandleMatchIsWaitingToStart()
-	data._table:init()
-end
+local function BroadcastPlayerCards()
+	for agent_id,player_index in pairs(data._agent) do
+		local player = data._room:getPlayer(player_index)
 
-local function HandleMatchHasStarted()
-
-end
-
-local function onMatchStateSet()
-	if data._matchState == MatchState.WaitingToStart then
-		HandleMatchIsWaitingToStart()
-	elseif data._matchState == MatchState.InProgress then
-		HandleMatchHasStarted()
+		local player_card = player.getCards()
+		skynet.send(agent_id,"lua","notifyPlayerCard",player_card)
 	end
 end
 
-local function setMatchState(matchState)
-	if matchState == data._matchState then
+
+function room:init()
+	self._matchState = 0
+	self._need_player_num = 4
+	self._table = game_table.new()
+	self._player = {}
+end
+
+function room:addMaster(agent)
+	local n = math.random(data._need_player_num)
+	self._player[n] = PlayerClass.new(agent,n)
+	self._player[n]:setMaster()
+	return n
+end
+
+function room:addPlayer(agent)
+	local n = math.random(data._need_player_num)
+	while self._player[n] do
+		n = (n) % self._need_player_num + 1
+	end
+	self._player[n] = PlayerClass.new(agent,n)
+	return n
+end
+
+function room:HandleMatchIsWaitingToStart()
+	self._table:init()
+end
+
+function room:HandleMatchHasStarted()
+	self._table:create()
+	self._table:shuffle()
+	for i=1,2 do
+		for j = 1,4 do
+			local card_list = self._table:getCards(4)
+			self._player[j]:giveCards(card_list)
+		end
+	end
+	local card_list = self._table:getCards(2)
+	self._player[1]:giveCards(card_list)
+	for i = 2,4 do
+		local card_list = self._table:getCards(1)
+		self._player[i]:giveCards(card_list)
+	end
+	skynet.timeout(1 * 100,function() BroadcastPlayerCards() end)
+end
+
+function room:onMatchStateSet()
+	if data._matchState == MatchState.WaitingToStart then
+		self:HandleMatchIsWaitingToStart()
+	elseif data._matchState == MatchState.InProgress then
+		self:HandleMatchHasStarted()
+	end
+end
+
+function room:setMatchState(matchState)
+	if matchState == self._matchState then
 		return
 	end
-	data._matchState = matchState
-	onMatchStateSet()
+	self._matchState = matchState
+	self:onMatchStateSet()
 end
 
-
-function gameTimer()
-
+function room.getPlayerNum()
+	local n = 0
+	for _,_ in pairs(self._player) do
+		n = n + 1
+	end
+	return n
 end
 
 function K.initRoom(agent)
-	data._need_player_num = 4
-	local n = math.random(data._need_player_num)
+	data._room:create()
 
-	data._player[n] = PlayerClass.new(agent,n)
-	data._player[n]:setMaster()
-	data._agent[agent] = n
-	setMatchState(MatchState.WaitingToStart)
-	log("%d initRoom player_index %d" ,skynet.self(),n)
-	return true,n
+	local player_index = data._room:addMaster(agent)
+	data._agent[agent] = player_index
+
+	log("%d initRoom player_index %d" ,skynet.self(),player_index)
+	return true,player_index
 end
 
 function K.joinRoom(agent)
@@ -112,13 +165,7 @@ function K.startGame(agent)
 	return true
 end
 
-function K.getPlayerNum()
-	local n = 0
-	for _,_ in pairs(data._player) do
-		n = n + 1
-	end
-	return n
-end
+
 
 function K.getMasterIndex()
 	for _,player_index in pairs(data._agent) do

@@ -62,7 +62,7 @@ function cli:startGame()
 		return {ok = false}
 	end
 
-	local result = skynet.call(self.room,"lua","startGame")
+	local result = skynet.call(self.room,"lua","startGame",skynet:self())
 
 	return {ok = result}
 end
@@ -128,6 +128,10 @@ function agent.onPlayerJoin(player_info)
 		player_index = player_info.player_index
 	})	-- push message to client
 	return 0
+end
+
+function agent.notifyPlayerCard(card_list)
+	client.push(data, "NotifyPlayerCard",)
 end
 
 

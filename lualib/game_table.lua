@@ -11,16 +11,50 @@ function K.new()
 end
 
 function K:init()
-  self.cards = {
-    0x01,0x02
-  }
-  for i=#self.cards,2,-1 do
-    local tmp = self.cards[i]
+  self._cards = {}
+end
+
+function K:shuffle()
+  for i=#self._cards,2,-1 do
+    local tmp = self._cards[i]
     local index = math.random(1, i - 1)
-    self.cards[i] = self.cards[index]
-    self.cards[index] = tmp
+    self._cards[i] = self._cards[index]
+    self._cards[index] = tmp
   end
 end
+
+function K:create()
+  local num = 3*9 + 7
+  for i = 1,3 do
+    for j = 1,9 do
+      for k = 1,4 do
+        table.insert(self._cards, i * 16 + j)
+      end
+    end
+  end
+  for j = 1,7 do
+    for k = 1,4 do
+      table.insert(self._cards, 4 * 16 + j)
+    end
+  end
+end
+
+function K:getCards(cardNum)
+  local t = {}
+  for i = 1,cardNum do
+    local card = table.remove(self._cards,1)
+    table.insert(t,1,card)
+  end
+  return t
+end
+
+function K:getLastCard()
+  local t = {}
+  local card = table.remvoe(self._cards)
+  table.insert(t,1,card)
+  return t
+end
+
 
 function K:RequestStart()
 
