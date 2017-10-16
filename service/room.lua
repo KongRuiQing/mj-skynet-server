@@ -32,7 +32,7 @@ local function BroadcastStartGame(player_cards)
 end
 
 function K.initRoom(agent)
-	data._GameMode:create()
+	data._GameMode:create(data)
 
 	local player_index = data._GameMode:addMaster(agent)
 	data._agent[agent] = player_index
@@ -64,8 +64,6 @@ function K.startGame(agent)
 	return true
 end
 
-
-
 function K.getMasterIndex()
 	for _,player_index in pairs(data._agent) do
 		local p = data._player[player_index]
@@ -78,13 +76,10 @@ end
 
 
 function K.addRobot()
-
 	local robot = data._GameMode:addRobot()
 	if robot then
 		BroadcastPlayerJoin(robot)
 	end
-
-
 	return true
 end
 

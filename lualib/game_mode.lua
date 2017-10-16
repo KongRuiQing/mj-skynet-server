@@ -36,8 +36,9 @@ function K:addMaster(agent)
 	return n
 end
 
-function K:create()
+function K:create(data)
 	self:init()
+	self._agent = data._agent
 end
 
 function K:addPlayer(agent)
@@ -70,6 +71,10 @@ function K:HandleMatchIsWaitingToStart()
 	self._table:init()
 end
 
+local function handler(obj,func,...)
+	return function(...) func(obj,...) end
+end
+
 function K:HandleMatchHasStarted()
 	log("room:HandleMatchHasStarted")
 	self._table:create()
@@ -91,14 +96,21 @@ function K:HandleMatchHasStarted()
 	for i,p in pairs(self._player) do
 		local notify = {
 			list = p:getCards(),
+			other = {}
 		}
-		notify[other] =  {}
 		for j, o in pairs(self._player) do
 			table.insert(notify[other],j,o:getCardsNumInHand())
 		end
 		table.insert(player_cards,i,notify)
 	end
-	skynet.timeout(1 * 100,function() BroadcastStartGame(player_cards) end)
+	local method = handler(self,K.broadcastGamePlayCard,player_cards)
+	skynet.timeout(1 * 100, function() method() end)
+end
+
+function K:broadcastGamePlayCard(player_cards)
+	for agent_id,player_index in pairs(self._agent) do
+		skynet.send(agent_id,"lua","onStartGame",player_cards[player_index])
+	end
 end
 
 function K:onMatchStateSet()
