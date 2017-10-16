@@ -117,7 +117,7 @@ function K:setMatchState(matchState)
 	self:onMatchStateSet()
 end
 
-function K.getPlayerNum()
+function K:getPlayerNum()
 	local n = 0
 	for _,_ in pairs(self._player) do
 		n = n + 1
@@ -125,7 +125,7 @@ function K.getPlayerNum()
 	return n
 end
 
-function K.startGame()
+function K:startGame()
 	self:setMatchState(GameState.InProgress)
 end
 
