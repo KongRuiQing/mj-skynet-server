@@ -29,7 +29,7 @@ function K:init()
 end
 
 function K:addMaster(agent)
-	local n = math.random(data._need_player_num)
+	local n = math.random(self._need_player_num)
 	self._player[n] = PlayerClass.new(agent,n)
 	self._player[n]:setMaster()
 	self._masterIndex = n
@@ -41,7 +41,7 @@ function K:create()
 end
 
 function K:addPlayer(agent)
-	local n = math.random(data._need_player_num)
+	local n = math.random(self._need_player_num)
 	while self._player[n] do
 		n = (n) % self._need_player_num + 1
 	end
@@ -96,9 +96,9 @@ function K:HandleMatchHasStarted()
 end
 
 function K:onMatchStateSet()
-	if data._matchState == MatchState.WaitingToStart then
+	if self._matchState == MatchState.WaitingToStart then
 		self:HandleMatchIsWaitingToStart()
-	elseif data._matchState == MatchState.InProgress then
+	elseif self._matchState == MatchState.InProgress then
 		self:HandleMatchHasStarted()
 	end
 end
