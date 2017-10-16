@@ -16,7 +16,7 @@ local MatchState = {
 
 function K.new()
 	local o = {}
-	setmetatable(o,{__index = room })
+	setmetatable(o,{__index = K })
 	--K.init(o)
 	return o
 end
