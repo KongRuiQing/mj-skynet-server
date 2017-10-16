@@ -17,7 +17,7 @@ local MatchState = {
 function K.new()
 	local o = {}
 	setmetatable(o,{__index = room })
-	K.init(o)
+	--K.init(o)
 	return o
 end
 
@@ -34,6 +34,10 @@ function K:addMaster(agent)
 	self._player[n]:setMaster()
 	self._masterIndex = n
 	return n
+end
+
+function K:create()
+	self:init()
 end
 
 function K:addPlayer(agent)
