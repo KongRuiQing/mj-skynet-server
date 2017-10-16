@@ -103,8 +103,8 @@ function K:HandleMatchHasStarted()
 		end
 		table.insert(player_cards,i,notify)
 	end
-	local method = handler(self,K.broadcastGamePlayCard,player_cards)
-	skynet.timeout(1 * 100, function() method() end)
+	local method = handler(self,K.broadcastGamePlayCard)
+	skynet.timeout(1 * 100, function() method(player_cards) end)
 end
 
 function K:broadcastGamePlayCard(player_cards)
