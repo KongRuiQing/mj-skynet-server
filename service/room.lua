@@ -78,15 +78,13 @@ end
 
 
 function K.addRobot()
-	local num_player = K.getPlayerNum()
-	if num_player >= data._need_player_num then
-		return false
-	end
 
 	local robot = data._GameMode:addRobot()
+	if robot then
+		BroadcastPlayerJoin(robot)
+	end
 
 
-	BroadcastPlayerJoin(robot)
 	return true
 end
 

@@ -50,6 +50,10 @@ function K:addPlayer(agent)
 end
 
 function K:addRobot()
+	local num = self:getPlayerNum()
+	if num >= self._need_player_num then
+		return nil
+	end
 	local robot_id = self._masterIndex % self._need_player_num + 1
 	while self._player[robot_id] do
 		robot_id = ((robot_id) % self._need_player_num) + 1
@@ -57,6 +61,8 @@ function K:addRobot()
 	log("%d addRobot robot_id %d",skynet.self(),robot_id)
 
 	self._player[robot_id] = PlayerClass.robot(robot_id)
+
+	return self._player[robot_id]
 end
 
 
