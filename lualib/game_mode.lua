@@ -126,7 +126,7 @@ function K:getPlayerNum()
 end
 
 function K:startGame()
-	self:setMatchState(GameState.InProgress)
+	self:setMatchState(MatchState.InProgress)
 end
 
 return K
