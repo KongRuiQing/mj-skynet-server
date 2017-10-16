@@ -99,7 +99,7 @@ function K:HandleMatchHasStarted()
 			other = {}
 		}
 		for j, o in pairs(self._player) do
-			table.insert(notify[other],j,o:getCardsNumInHand())
+			table.insert(notify.other,j,o:getCardsNumInHand())
 		end
 		table.insert(player_cards,i,notify)
 	end
