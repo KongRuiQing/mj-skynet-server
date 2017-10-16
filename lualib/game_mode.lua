@@ -95,7 +95,7 @@ function K:HandleMatchHasStarted()
 
 	for i,p in pairs(self._player) do
 		local notify = {
-			list = p:getCards(),
+			hand_card = p:getCards(),
 			other = {}
 		}
 		for j, o in pairs(self._player) do
