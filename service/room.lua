@@ -43,12 +43,9 @@ local function BroadcastPlayerJoin(p)
 	end
 end
 
-local function BroadcastPlayerCards()
+local function BroadcastStartGame(player_cards)
 	for agent_id,player_index in pairs(data._agent) do
-		local player = data._room:getPlayer(player_index)
-
-		local player_card = player.getCards()
-		skynet.send(agent_id,"lua","notifyPlayerCard",player_card)
+		skynet.send(agent_id,"lua","onStartGame",player_cards[player_index])
 	end
 end
 
@@ -81,6 +78,7 @@ function room:HandleMatchIsWaitingToStart()
 end
 
 function room:HandleMatchHasStarted()
+	log("room:HandleMatchHasStarted")
 	self._table:create()
 	self._table:shuffle()
 	for i=1,2 do
@@ -95,7 +93,19 @@ function room:HandleMatchHasStarted()
 		local card_list = self._table:getCards(1)
 		self._player[i]:giveCards(card_list)
 	end
-	skynet.timeout(1 * 100,function() BroadcastPlayerCards() end)
+	local player_cards = {}
+
+	for i,p in pairs(self._player) do
+		local notify = {
+			list = p:getCards(),
+		}
+		notify[other] =  {}
+		for j, o in pairs(self._player) do
+			table.insert(notify[other],j,o:getCardsNumInHand())
+		end
+		table.insert(player_cards,i,notify)
+	end
+	skynet.timeout(1 * 100,function() BroadcastStartGame(player_cards) end)
 end
 
 function room:onMatchStateSet()

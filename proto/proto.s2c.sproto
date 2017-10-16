@@ -17,3 +17,10 @@ NotifyPlayerJoin 2 {
 		player_index 2 : integer
 	}
 }
+
+NotifyStartGame 3 {
+	request {
+		hand_card 0 : *integer
+		other 1 : *integer
+	}
+}

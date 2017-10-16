@@ -21,6 +21,7 @@ function K:shuffle()
     self._cards[i] = self._cards[index]
     self._cards[index] = tmp
   end
+  log("table.shuffle result : %s", table.concat(self._cards,","))
 end
 
 function K:create()

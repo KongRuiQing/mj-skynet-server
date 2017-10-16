@@ -90,5 +90,9 @@ function player:getCards()
   return self._cards
 end
 
+function player:getCardsNumInHand()
+  return #self._cards
+end
+
 
 return player

@@ -130,8 +130,8 @@ function agent.onPlayerJoin(player_info)
 	return 0
 end
 
-function agent.notifyPlayerCard(card_list)
-	client.push(data, "NotifyPlayerCard",)
+function agent.onStartGame(player_cards)
+	client.push(data,"NotifyStartGame",player_cards)
 end
 
 
