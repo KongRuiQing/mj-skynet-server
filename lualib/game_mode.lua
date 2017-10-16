@@ -119,4 +119,4 @@ function K.startGame()
 	self:setMatchState(GameState.InProgress)
 end
 
-return room
+return K
