@@ -111,6 +111,7 @@ function K:gameTimer()
 		self._tickTime = self._tickTime + 1
 		if self._tickTime >= 20 then
 			self._currentIndex = self._currentIndex % self._need_player_num
+		end
 	end
 end
 
