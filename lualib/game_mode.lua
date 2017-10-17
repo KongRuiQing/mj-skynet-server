@@ -3,6 +3,7 @@ local log = require "log"
 local PlayerClass = require "player"
 local game_table = require "game_table"
 local log = require "log"
+local CardHelp = require "CardHelp"
 local K = {}
 local MatchState = {
 	EnteringMap = 1,
