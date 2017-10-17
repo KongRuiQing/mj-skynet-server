@@ -125,7 +125,7 @@ function K:broadcastGamePlayCard()
 				table.insert(other,j,self._player[j]:getCardsNumInHand())
 			end
 		end
-
+		log("player %d card_in hand %s",player_index,table.concat(card_in_hand,","))
 		skynet.send(agent_id,"lua","onStartGame",{
 			hand_card = card_in_hand,
 			other = other,

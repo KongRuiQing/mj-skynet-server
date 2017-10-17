@@ -14,7 +14,7 @@ function K.getStateAtStart(card_list)
     if num[c] then
       num[c] = num[c] + 1
     else
-      table.insert(num,c,1)
+      num[c] = 1
     end
     if num[c] == 4 then
       state = (state | Mask.GANG)
