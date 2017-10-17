@@ -60,7 +60,7 @@ end
 function K:addPlayer(agent)
 	local n = math.random(self._needPlayerNum)
 	while self._player[n] do
-		n = (n) % self._need_player_num + 1
+		n = (n) % self._needPlayerNum + 1
 	end
 	self._player[n] = PlayerClass.new(agent,n)
 	return n
@@ -68,12 +68,12 @@ end
 
 function K:addRobot()
 	local num = self:getPlayerNum()
-	if num >= self._need_player_num then
+	if num >= self._needPlayerNum then
 		return nil
 	end
-	local robot_id = self._masterIndex % self._need_player_num + 1
+	local robot_id = self._masterIndex % self._needPlayerNum + 1
 	while self._player[robot_id] do
-		robot_id = ((robot_id) % self._need_player_num) + 1
+		robot_id = ((robot_id) % self._needPlayerNum) + 1
 	end
 	log("%d addRobot robot_id %d",skynet.self(),robot_id)
 
@@ -110,7 +110,7 @@ function K:gameTimer()
 	if self._matchState == MatchState.InProgress then
 		self._tickTime = self._tickTime + 1
 		if self._tickTime >= 20 then
-			self._currentIndex = self._currentIndex % self._need_player_num
+			self._currentIndex = self._currentIndex % self._needPlayerNum
 		end
 	end
 end
