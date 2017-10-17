@@ -91,7 +91,7 @@ end
 function K:HandleMatchHasStarted()
 	self._table:create()
 	self._table:shuffle()
-	for i=1,2 do
+	for i=1,3 do
 		for j = 1,4 do
 			local card_list = self._table:getCards(4)
 			self._player[j]:giveCards(card_list)
