@@ -121,9 +121,10 @@ function K:broadcastGamePlayCard()
 		local other = {}
 		for j,player in pairs(self._player) do
 			if player_index ~= j then
-				table.insert(other,j,self._player[j]:getCardNumInHand())
+				table.insert(other,j,self._player[j]:getCardsNumInHand())
 			end
 		end
+
 		skynet.send(agent_id,"lua","onStartGame",{
 			hand_card = card_in_hand,
 			other = other,
