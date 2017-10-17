@@ -25,11 +25,6 @@ local function BroadcastPlayerJoin(p)
 	end
 end
 
-local function BroadcastStartGame(player_cards)
-	for agent_id,player_index in pairs(data._agent) do
-		skynet.send(agent_id,"lua","onStartGame",player_cards[player_index])
-	end
-end
 
 function K.initRoom(agent)
 	data._GameMode:create(data)

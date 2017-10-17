@@ -13,6 +13,21 @@ local MatchState = {
 	Aborted = 6,
 }
 
+function K:newTimer(loop)
+	local o = {}
+	local obj = self
+
+	local timer_func = function()
+		log("Tick one second")
+		obj:gameTimer(1)
+		if loop then
+			skynet.timeout(1*100,o)
+		end
+	end
+	setmetatable(o,{__call = timer_func})
+	return o
+end
+
 
 function K.new()
 	local o = {}
@@ -23,13 +38,14 @@ end
 
 function K:init()
 	self._matchState = 0
-	self._need_player_num = 4
+	self._needPlayerNum = 4
 	self._table = game_table.new()
 	self._player = {}
+	self._currentIndex = 1
 end
 
 function K:addMaster(agent)
-	local n = math.random(self._need_player_num)
+	local n = math.random(self._needPlayerNum)
 	self._player[n] = PlayerClass.new(agent,n)
 	self._player[n]:setMaster()
 	self._masterIndex = n
@@ -42,7 +58,7 @@ function K:create(data)
 end
 
 function K:addPlayer(agent)
-	local n = math.random(self._need_player_num)
+	local n = math.random(self._needPlayerNum)
 	while self._player[n] do
 		n = (n) % self._need_player_num + 1
 	end
@@ -71,12 +87,7 @@ function K:HandleMatchIsWaitingToStart()
 	self._table:init()
 end
 
-local function handler(obj,func,...)
-	return function(...) func(obj,...) end
-end
-
 function K:HandleMatchHasStarted()
-	log("room:HandleMatchHasStarted")
 	self._table:create()
 	self._table:shuffle()
 	for i=1,2 do
@@ -91,25 +102,32 @@ function K:HandleMatchHasStarted()
 		local card_list = self._table:getCards(1)
 		self._player[i]:giveCards(card_list)
 	end
-	local player_cards = {}
+	self:broadcastGamePlayCard()
 
-	for i,p in pairs(self._player) do
-		local notify = {
-			hand_card = p:getCards(),
-			other = {}
-		}
-		for j, o in pairs(self._player) do
-			table.insert(notify.other,j,o:getCardsNumInHand())
-		end
-		table.insert(player_cards,i,notify)
-	end
-	local method = handler(self,K.broadcastGamePlayCard)
-	skynet.timeout(1 * 100, function() method(player_cards) end)
 end
 
-function K:broadcastGamePlayCard(player_cards)
+function K:gameTimer()
+	if self._matchState == MatchState.InProgress then
+		self._tickTime = self._tickTime + 1
+		if self._tickTime >= 20 then
+			self._currentIndex = self._currentIndex % self._need_player_num
+	end
+end
+
+function K:broadcastGamePlayCard()
 	for agent_id,player_index in pairs(self._agent) do
-		skynet.send(agent_id,"lua","onStartGame",player_cards[player_index])
+		local card_in_hand = self._player[player_index]:getCards()
+		local other = {}
+		for j,player in pairs(self._player) do
+			if player_index ~= j then
+				table.insert(other,j,self._player[j]:getCardNumInHand())
+			end
+		end
+		skynet.send(agent_id,"lua","onStartGame",{
+			hand_card = card_in_hand,
+			other = other,
+			state = CardHelp.getStateAtStart(card_in_hand)
+		})
 	end
 end
 
