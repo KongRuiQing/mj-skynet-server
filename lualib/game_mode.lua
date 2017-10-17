@@ -122,7 +122,7 @@ function K:broadcastGamePlayCard()
 		local other = {}
 		for j,player in pairs(self._player) do
 			if player_index ~= j then
-				table.insert(other,j,self._player[j]:getCardsNumInHand())
+				other[j] = self._player[j]:getCardsNumInHand()
 			end
 		end
 		log("player %d card_in hand %s",player_index,table.concat(card_in_hand,","))
