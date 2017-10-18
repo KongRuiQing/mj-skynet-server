@@ -88,6 +88,16 @@ function cli:ready()
 	skynet.call(self.room,"lua","ready",skynet.self())
 end
 
+function cli:usecard(req)
+	if not self.login then
+		return {ok = false}
+	end
+	if not self.room then
+		return {ok = false}
+	end
+	skynet.send(self.room,"lua","usecard",skynet.self(),req.cmd,req.card)
+end
+
 local function new_user(fd)
 	local ok, error = pcall(client.dispatch , { fd = fd })
 	log("fd=%d is gone. error = %s", fd, error)
@@ -133,6 +143,8 @@ end
 function agent.onStartGame(player_cards)
 	client.push(data,"NotifyStartGame",player_cards)
 end
+
+
 
 
 service.init {

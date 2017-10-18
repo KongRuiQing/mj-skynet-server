@@ -4,6 +4,8 @@ local PlayerClass = require "player"
 local game_table = require "game_table"
 local log = require "log"
 local CardHelp = require "CardHelp"
+local queue = require "skynet.queue"
+
 local K = {}
 local MatchState = {
 	EnteringMap = 1,
@@ -12,6 +14,10 @@ local MatchState = {
 	WaitingPostMatch = 4,
 	LeavingMap = 5,
 	Aborted = 6,
+}
+
+local CMDType = {
+	CHU_PAI = 1
 }
 
 function K:newTimer(loop)
@@ -40,6 +46,7 @@ end
 function K:init()
 	self._matchState = 0
 	self._needPlayerNum = 4
+	self.lock = queue()
 	self._table = game_table.new()
 	self._player = {}
 	self._currentIndex = 1
@@ -160,6 +167,42 @@ end
 
 function K:startGame()
 	self:setMatchState(MatchState.InProgress)
+end
+
+function K:useCard(player_index,cmd,card)
+	if cmd == CMDType.CHU_PAI then
+		if self._currentIndex ~= player_index then
+			return false
+		end
+
+		local player = self._player[player_index]
+		local success = player.useCard(card)
+		if not success then
+			return false
+		end
+		
+		local next = true
+		for i,p in pairs(self._player) do
+			if i ~= player_index then
+				local notify_card_state = p:testCard(card)
+				if notify_card_state ~= nil then
+					next = false
+					if player:getAgent() then
+						self.lock()
+					end
+				end
+			end
+		end
+		self._currentIndex = self._currentIndex % self._needPlayerNum + 1
+		if next then
+			local give_card = self._table:getCards(1)
+			local nextPlayer = self._player[self._currentIndex]
+			nextPlayer:giveCards(give_card)
+			if nextPlayer:getAgent() then
+				self.lock()
+			end
+		end
+	end
 end
 
 return K

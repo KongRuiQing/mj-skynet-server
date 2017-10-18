@@ -55,3 +55,13 @@ startGame 7 {
 		ok 0 : boolean
 	}
 }
+
+usecard 8 {
+	request{
+		cmd 0 : integer
+		card 1 : integer
+	}
+	response {
+		ok 0 : boolean
+	}
+}

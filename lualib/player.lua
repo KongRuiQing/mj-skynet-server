@@ -94,5 +94,31 @@ function player:getCardsNumInHand()
   return #self._cards
 end
 
+function player:useCard(card)
+  for i,c in pairs(self._cards) do
+    if c == card then
+      table.remove(self._cards,i,1)
+      return true
+    end
+  end
+  return false
+end
+
+function player:getAgent()
+  return self._agent
+end
+
+function player:testCard(card)
+
+  if card then
+    local chi = false
+    if CardHelp.canChi(self._cards,card) then
+      chi = true
+    end
+  end
+
+
+end
+
 
 return player

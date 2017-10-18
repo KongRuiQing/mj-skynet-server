@@ -78,6 +78,13 @@ function K.addRobot()
 	return true
 end
 
+function K.usecard(agent_id,cmd,card)
+	local player_index = data._agent[agent_id]
+
+	data._GameMode:useCard(player_index,cmd,card)
+	return true
+end
+
 local function _init()
 	log("room addresss %d",skynet.self())
 	math.randomseed(os.time())
