@@ -14,18 +14,6 @@ local data = {
 	_GameMode = game_mode.new()
 }
 
-local function BroadcastPlayerJoin(p)
-	for agent_id,player_index in pairs(data._agent) do
-		--log("send proto(onPlayerJoin) agent_id %d player_index %d",agent_id,player_index)
-		skynet.send(agent_id,"lua","onPlayerJoin",{
-			name = p:getName(),
-			is_ready = p:isReady(),
-			player_index = p:getIndex()
-		})
-	end
-end
-
-
 function K.initRoom(agent)
 	data._GameMode:create(data)
 
@@ -72,9 +60,7 @@ end
 
 function K.addRobot()
 	local robot = data._GameMode:addRobot()
-	if robot then
-		BroadcastPlayerJoin(robot)
-	end
+	
 	return true
 end
 

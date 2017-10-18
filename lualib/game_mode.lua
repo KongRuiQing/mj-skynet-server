@@ -16,6 +16,12 @@ local MatchState = {
 	Aborted = 6,
 }
 
+local TableState = {
+	Init = 1,
+	Waiting = 2,
+	GameResult = 3,
+}
+
 local CMDType = {
 	CHU_PAI = 1
 }
@@ -47,9 +53,11 @@ function K:init()
 	self._matchState = 0
 	self._needPlayerNum = 4
 	self.lock = queue()
+	self._tableState = TableState.Init
 	self._table = game_table.new()
 	self._player = {}
-	self._currentIndex = 1
+	self._currentIndex = 0
+	self._step = 0
 end
 
 function K:addMaster(agent)
@@ -86,8 +94,20 @@ function K:addRobot()
 	log("%d addRobot robot_id %d",skynet.self(),robot_id)
 
 	self._player[robot_id] = PlayerClass.robot(robot_id)
-
+	self.lock(self.BroadcastPlayerJoin,self,robot_id)
 	return self._player[robot_id]
+end
+
+function K:BroadcastPlayerJoin(player_id)
+	local player = self._player[player_id]
+	for agent_id,player_index in pairs(self._agent) do
+		--log("send proto(onPlayerJoin) agent_id %d player_index %d",agent_id,player_index)
+		skynet.send(agent_id,"lua","onPlayerJoin",{
+			name = player:getName(),
+			is_ready = player:isReady(),
+			player_index = player:getIndex()
+		})
+	end
 end
 
 
@@ -98,6 +118,8 @@ end
 function K:HandleMatchHasStarted()
 	self._table:create()
 	self._table:shuffle()
+	self._currentIndex = 1
+	self._step = 1
 	for i=1,3 do
 		for j = 1,4 do
 			local card_list = self._table:getCards(4)
@@ -110,15 +132,17 @@ function K:HandleMatchHasStarted()
 		local card_list = self._table:getCards(1)
 		self._player[i]:giveCards(card_list)
 	end
-	self:broadcastGamePlayCard()
-
+	self.lock(self.broadcastGamePlayCard,self)
 end
+
 
 function K:gameTimer()
 	if self._matchState == MatchState.InProgress then
 		self._tickTime = self._tickTime + 1
-		if self._tickTime >= 20 then
-			self._currentIndex = self._currentIndex % self._needPlayerNum
+		if self._tableState == TableState.Wait then
+			if self._tickTime >= 20 then
+				-- 当前玩家扔一张,进行下一个
+			end
 		end
 	end
 end
@@ -128,17 +152,18 @@ function K:broadcastGamePlayCard()
 		local card_in_hand = self._player[player_index]:getCards()
 		local other = {}
 		for j,player in pairs(self._player) do
-			if player_index ~= j then
-				other[j] = self._player[j]:getCardsNumInHand()
-			end
+			other[j] = self._player[j]:getCardsNumInHand()
 		end
-		log("player %d card_in hand %s",player_index,table.concat(card_in_hand,","))
+		--log("player %d card_in hand %s",player_index,table.concat(card_in_hand,","))
 		skynet.send(agent_id,"lua","onStartGame",{
 			hand_card = card_in_hand,
 			other = other,
-			state = CardHelp.getStateAtStart(card_in_hand)
 		})
 	end
+
+	self._tableState = TableState.Wait
+	self._currentIndex = 1
+	self._step = 1
 end
 
 function K:onMatchStateSet()
@@ -180,7 +205,7 @@ function K:useCard(player_index,cmd,card)
 		if not success then
 			return false
 		end
-		
+
 		local next = true
 		for i,p in pairs(self._player) do
 			if i ~= player_index then
@@ -199,10 +224,26 @@ function K:useCard(player_index,cmd,card)
 			local nextPlayer = self._player[self._currentIndex]
 			nextPlayer:giveCards(give_card)
 			if nextPlayer:getAgent() then
-				self.lock()
+
 			end
 		end
 	end
+end
+
+function K:use_CHU_card()
+
+end
+
+function K:use_CHI_card()
+
+end
+
+function K:use_PENG_card()
+end
+function K:use_GANG_card()
+end
+function K:use_HU_card()
+
 end
 
 return K
