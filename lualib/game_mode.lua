@@ -151,9 +151,11 @@ function K:broadcastGamePlayCard()
 	for agent_id,player_index in pairs(self._agent) do
 		local card_in_hand = self._player[player_index]:getCards()
 		local other = {}
-		for j,player in pairs(self._player) do
-			other[j] = self._player[j]:getCardsNumInHand()
+		for player_index,player in pairs(self._player) do
+			other[player_index] = player:getCardsNumInHand()
+			log("player %d card num in hand %d", player_index,player:getCardsNumInHand())
 		end
+
 		--log("player %d card_in hand %s",player_index,table.concat(card_in_hand,","))
 		skynet.send(agent_id,"lua","onStartGame",{
 			hand_card = card_in_hand,
